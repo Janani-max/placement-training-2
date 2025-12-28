@@ -1,0 +1,39 @@
+from collections import deque
+
+class Solution:
+    def pacificAtlantic(self, heights):
+        if not heights:
+            return []
+        
+        m, n = len(heights), len(heights[0])
+        
+        pacific = [[False] * n for _ in range(m)]
+        atlantic = [[False] * n for _ in range(m)]
+        
+        directions = [(1, 0), (-1, 0), (0, 1), (0, -1)]
+        
+        def bfs(starts, ocean):
+            queue = deque(starts)
+            while queue:
+                i, j = queue.popleft()
+                ocean[i][j] = True
+                for di, dj in directions:
+                    ni, nj = i + di, j + dj
+                    if (0 <= ni < m and 0 <= nj < n 
+                        and not ocean[ni][nj] 
+                        and heights[ni][nj] >= heights[i][j]):
+                        queue.append((ni, nj))
+        
+        pacific_starts = [(i, 0) for i in range(m)] + [(0, j) for j in range(n)]
+        atlantic_starts = [(i, n - 1) for i in range(m)] + [(m - 1, j) for j in range(n)]
+        
+        bfs(pacific_starts, pacific)
+        bfs(atlantic_starts, atlantic)
+        
+        res = []
+        for i in range(m):
+            for j in range(n):
+                if pacific[i][j] and atlantic[i][j]:
+                    res.append([i, j])
+        
+        return res
