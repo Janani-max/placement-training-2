@@ -1,0 +1,24 @@
+class Solution(object):
+    def splitArray(self, nums, k):
+        def isValid(mid):
+            parts = 1
+            summ = 0
+            for num in nums:
+                if summ + num > mid:
+                    parts += 1
+                    summ = num
+                else:
+                    summ += num
+            return parts <= k
+
+        left = max(nums)
+        right = sum(nums)
+
+        while left < right:
+            mid = (left + right)
+            if isValid(mid):
+                right = mid
+            else:
+                left = mid + 1
+
+        return left
