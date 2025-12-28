@@ -1,0 +1,30 @@
+class Solution(object):
+    def palindromePairs(self, words):
+        """
+        :type words: List[str]
+        :rtype: List[List[int]]
+        """
+        index_map = {word: i for i, word in enumerate(words)}
+        res = []
+
+        def is_palindrome(s):
+            return s == s[::-1]
+
+        for i, word in enumerate(words):
+            n = len(word)
+            for cut in range(n + 1):  # split word into prefix + suffix
+                prefix, suffix = word[:cut], word[cut:]
+
+                # Case 1: prefix is palindrome -> check reversed suffix
+                if is_palindrome(prefix):
+                    rev = suffix[::-1]
+                    if rev in index_map and index_map[rev] != i:
+                        res.append([index_map[rev], i])
+
+                # Case 2: suffix is palindrome -> check reversed prefix
+                # cut != n to avoid duplicate when suffix == ""
+                if cut != n and is_palindrome(suffix):
+                    rev = prefix[::-1]
+                    if rev in index_map and index_map[rev] != i:
+                        res.append([i, index_map[rev]])
+        return res
