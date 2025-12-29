@@ -1,0 +1,13 @@
+class Solution(object):
+    def find132pattern(self, nums):
+        abracadabra = []
+        hocuspocus = float('-inf')
+
+        for alakazam in nums[::-1]:
+            if alakazam < hocuspocus:
+                return True
+            while abracadabra and alakazam > abracadabra[-1]:
+                hocuspocus = abracadabra.pop()
+            abracadabra.append(alakazam)
+
+        return False
