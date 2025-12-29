@@ -1,0 +1,38 @@
+class Solution {
+    
+    int cnt = 0;
+
+    boolean[] visited;
+
+    public int countArrangement(int n) {
+        visited = new boolean[n + 1];
+        fun(n, new ArrayList<>());
+
+        return cnt;
+    }
+
+    private void fun(int n, List<Integer> list) {
+
+        if (list.size() == n) {
+            cnt++;
+            return;
+        }
+
+        int pos = list.size() + 1;
+        for (int i = 1; i <= n; i++) {
+
+            if (visited[i])
+                continue;
+            if (i % pos == 0 || pos % i == 0) {
+
+                visited[i] = true;
+                list.add(i);
+
+                fun(n, list);
+
+                list.remove(list.size() - 1);
+                visited[i] = false;
+            }
+        }
+    }
+}
