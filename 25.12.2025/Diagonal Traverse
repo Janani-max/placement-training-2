@@ -1,0 +1,35 @@
+class Solution(object):
+
+    def findDiagonalOrder(self, mat):
+
+        if not mat or not mat[0]:
+
+            return []
+
+        n, m = len(mat), len(mat[0])
+
+        res = []
+
+        for d in range(n + m - 1):
+
+            row_start = max(0, d - m + 1)
+
+            row_end = min(n - 1, d)
+
+            diagonal = []
+
+            for i in range(row_start, row_end + 1):
+
+                j = d - i
+
+                diagonal.append(mat[i][j])
+
+            if d % 2 == 0:
+
+                res.extend(diagonal[::-1])
+
+            else:
+
+                res.extend(diagonal)
+
+        return res
