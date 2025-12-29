@@ -1,0 +1,18 @@
+class Solution {
+    public int change(int amount, int[] coins) {
+        return countWays(coins, coins.length, amount);
+    }
+
+    private int countWays(int[] coins, int idx, int amt) {
+        if (amt == 0) return 1;
+        if (idx == 0) return 0;
+
+        int skip = countWays(coins, idx - 1, amt);
+
+        int take = 0;
+        if (coins[idx - 1] <= amt)
+            take = countWays(coins, idx, amt - coins[idx - 1]);
+
+        return skip + take;
+    }
+}
