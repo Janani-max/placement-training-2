@@ -1,0 +1,19 @@
+class Solution(object):
+    def addOneRow(self, root, val, depth):
+        if depth == 1:
+            return TreeNode(val, left=root)
+        queue = [root]
+        current_depth = 1
+        while current_depth < depth - 1:
+            next_queue = []
+            for node in queue:
+                if node.left:
+                    next_queue.append(node.left)
+                if node.right:
+                    next_queue.append(node.right)
+            queue = next_queue
+            current_depth += 1
+        for node in queue:
+            node.left = TreeNode(val, left=node.left)
+            node.right = TreeNode(val, right=node.right)
+        return root
