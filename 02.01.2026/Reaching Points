@@ -1,0 +1,33 @@
+class Solution(object):
+    def reachingPoints(self, sx, sy, tx, ty):
+        """
+        :type sx: int
+        :type sy: int
+        :type tx: int
+        :type ty: int
+        :rtype: bool
+        """
+        if (sx,sy) == (tx,ty):
+            return True
+        while tx >= sx and ty >= sy and (sx,sy) != (tx,ty):
+            if tx > ty:
+                if ty == sy:
+                    if (tx-sx)%sy:
+                        return False
+                    else:
+                        return True
+                tx = ty + (tx%ty)
+                tx -= ty
+            elif ty > tx:
+                if tx == sx:
+                    if (ty-sy)%sx:
+                        return False
+                    else:
+                        return True
+                ty = tx + (ty%tx)
+                ty -= tx
+            else:
+                return False
+        return (sx,sy) == (tx,ty)
+
+        
