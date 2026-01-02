@@ -1,0 +1,47 @@
+class Solution {
+
+    public List<List<Integer>> allPathsSourceTarget(int[][] graph) {
+
+        int V = graph.length;
+
+        List<List<Integer>> result = new ArrayList<>();
+
+        List<Integer> subPath = new ArrayList<>();
+
+        boolean visited[] = new boolean[V];
+
+        dfs(graph, visited, result, subPath, 0, V);
+
+        return result;
+    }
+
+   
+    void dfs(int[][] graph, boolean visited[],
+             List<List<Integer>> result,
+             List<Integer> subPath,
+             int node, int V) {
+
+        visited[node] = true;
+
+        subPath.add(node);
+        if (node == V - 1) {
+
+            result.add(new ArrayList<>(subPath));
+
+            return;
+        }
+
+        for (int v : graph[node]) {
+
+      
+            if (visited[v] == false) {
+
+                dfs(graph, visited, result, subPath, v, V);
+
+                subPath.remove(subPath.size() - 1);
+
+                visited[v] = false;
+            }
+        }
+    }
+}
