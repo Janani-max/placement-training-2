@@ -1,0 +1,11 @@
+class Solution(object):
+    def maskPII(self, s):
+        if '@' in s:
+            s = s.lower()
+            i = s.index('@')
+            return s[0] + '*****' + s[i-1:]
+        digits = [c for c in s if c.isdigit()]
+        local = ''.join(digits[-10:])
+        cc = len(digits) - 10
+        prefix = '+' + '*'*cc + '-' if cc else ''
+        return prefix + '***-***-' + local[-4:]
