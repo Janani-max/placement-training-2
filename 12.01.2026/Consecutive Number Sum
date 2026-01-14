@@ -1,0 +1,14 @@
+class Solution(object):
+    def consecutiveNumbersSum(self, n):
+        count = 0
+        d = 1
+        while d * d <= n:
+            if n % d == 0:
+                # d is a divisor
+                if d % 2 == 1:
+                    count += 1
+                # n//d is also a divisor
+                if (n // d) % 2 == 1 and d != n // d:
+                    count += 1
+            d += 1
+        return count
