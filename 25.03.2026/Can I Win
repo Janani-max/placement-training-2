@@ -1,0 +1,44 @@
+class Solution {
+    public boolean canIWin(int maxChoosableInteger, int desiredTotal) {
+        int totalPossibleSum = maxChoosableInteger * (maxChoosableInteger + 1) / 2;
+        if (totalPossibleSum < desiredTotal) return false;
+
+        Map<Integer, Boolean> memo = new HashMap<>();
+        return dp(desiredTotal, 0, maxChoosableInteger, memo);
+    }
+
+    private boolean dp(int goal, int state, int maxChoosable, Map<Integer, Boolean> memo) {
+        if (memo.containsKey(state)) {
+            return memo.get(state);
+        }
+        
+        boolean result = false;
+        
+        for (int i = 1; i <= maxChoosable; i++) {
+            
+            boolean isAvailable = (state >> i) % 2 == 0;
+            
+            if (!isAvailable) {
+                continue;
+            }
+            
+            if (goal - i <= 0) {
+                result = true;
+                break;
+            }
+
+            int currMask = 1 << i;
+            int newState = state | currMask;
+
+            boolean rivalResult = dp(goal - i, newState, maxChoosable, memo);
+            
+            if (!rivalResult) {
+                result = true;
+                break;
+            }
+        }
+
+        memo.put(state, result);
+        return result;
+    }
+}
