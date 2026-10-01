@@ -1,0 +1,86 @@
+class ExamRoom {
+    int n;    
+    Map<Integer, Interval> startMap;
+    Map<Integer, Interval> endMap;
+    TreeSet<Interval> intervalSet;
+
+    public ExamRoom(int n) {
+        this.n = n;
+        startMap = new HashMap<>();
+        endMap = new HashMap<>();
+        intervalSet = new TreeSet<>((a, b) -> {
+            int length1 = findSeatingDistance(a);
+            int length2 = findSeatingDistance(b);
+
+            if (length1 == length2) {
+                return Integer.compare(a.start, b.start);
+            }
+
+            return Integer.compare(length2, length1);
+        });
+        intervalSet.add(new Interval(-1, n));
+    }
+
+    private int findSeatingDistance(Interval interval) {
+        if (interval.start == -1) {
+            return interval.end;
+        } else if (interval.end == n) {
+            return n - interval.start - 1;
+        } else {
+            return (interval.end - interval.start) / 2;
+        }
+    }
+    
+    public int seat() {
+        Interval interval = intervalSet.first();
+        int bestSeat = -1;
+        if (interval.start == -1) {
+            bestSeat = 0;
+        } else if (interval.end == n) {
+            bestSeat = n - 1;
+        } else {
+            bestSeat = interval.start + (interval.end - interval.start) / 2;
+        }
+        splitInterval(interval, bestSeat);
+        return bestSeat;
+    }
+    
+    public void leave(int p) {
+        Interval leftInterval = endMap.get(p);
+        Interval rightInterval = startMap.get(p);
+
+        startMap.remove(p);
+        endMap.remove(p);
+        intervalSet.remove(leftInterval);
+        intervalSet.remove(rightInterval);
+
+        Interval mergedInterval = new Interval(leftInterval.start, rightInterval.end);
+        intervalSet.add(mergedInterval);
+        startMap.put(mergedInterval.start, mergedInterval);
+        endMap.put(mergedInterval.end, mergedInterval);
+    }
+
+    private void splitInterval(Interval interval, int seat) {
+        intervalSet.remove(interval);
+        Interval leftInterval = new Interval(interval.start, seat);
+        Interval rightInterval = new Interval(seat, interval.end);
+
+        intervalSet.add(leftInterval);
+        intervalSet.add(rightInterval);
+
+        startMap.put(interval.start, leftInterval);
+        endMap.put(seat, leftInterval);
+        startMap.put(seat, rightInterval);
+        endMap.put(interval.end, rightInterval);
+    }
+}
+
+class Interval {
+    int start;
+    int end;
+
+    public Interval(int start, int end) {
+        this.start = start;
+        this.end = end;
+    }
+}
