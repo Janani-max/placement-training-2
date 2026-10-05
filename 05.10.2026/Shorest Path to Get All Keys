@@ -1,0 +1,58 @@
+class Solution {
+    public int shortestPathAllKeys(String[] grid) {
+        int m=grid.length;
+        int n=grid[0].length();
+        char[][] G=new char[m][n];
+        int totK=0;
+        for(int i=0;i<m;i++){
+            for(int j=0;j<n;j++){
+                G[i][j]=grid[i].charAt(j);
+                int asc=(int)G[i][j];
+                if(asc>=97 && asc<=122){
+                    totK++;
+                }
+            }
+        }
+        Queue<int[]> q=new LinkedList<>();
+        boolean[][][] visited=new boolean[m][n][1<<totK];
+        for(int i=0;i<m;i++){
+            for(int j=0;j<n;j++){
+                if(G[i][j]=='@'){
+                    q.offer(new int[]{i,j,0});
+                    visited[i][j][0]=true;
+                }
+            }
+        }
+        int[][] dirs={{-1,0},{1,0},{0,-1},{0,1}};
+        int moves=0;
+        while(!q.isEmpty()){
+            int size=q.size();
+            for(int i=1;i<=size;i++){
+                int[] node=q.poll();
+                if(node[2]==(1<<totK)-1) return moves;
+                for(int[] d:dirs){
+                    int nr=node[0]+d[0];
+                    int nc=node[1]+d[1];
+                    int mask=node[2];
+                    if(nr>=0 && nc>=0 && nr<m && nc<n && G[nr][nc]!='#'){
+                        int val=(int)G[nr][nc];
+                        if(val>=97 && val<=122){
+                            int k=val-97;
+                            mask=mask|(1<<k);
+                        }
+                        else if(val>=65 && val<=90){
+                            int target=val+32-97;
+                            if((mask&(1<<target))==0) continue;
+                        }
+                        if(!visited[nr][nc][mask]){
+                            visited[nr][nc][mask]=true;
+                            q.offer(new int[]{nr,nc,mask});
+                        }
+                    }
+                }
+            }
+            moves++;
+        }
+        return -1;
+    }
+}
